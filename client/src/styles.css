@@ -238,6 +238,67 @@ h3 {
   padding: 20px 0 40px;
 }
 
+.simple-shell {
+  width: min(calc(100% - 28px), 1040px);
+  margin: 0 auto;
+  padding: 24px 0 40px;
+}
+
+.simple-header,
+.simple-pagebar {
+  padding: 24px;
+  margin-bottom: 18px;
+}
+
+.simple-subtitle {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.simple-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.simple-stats,
+.simple-actions,
+.simple-book-layout,
+.simple-track-layout {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.simple-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.simple-actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.simple-book-layout,
+.simple-track-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.simple-stat,
+.simple-action-card,
+.simple-summary-card {
+  padding: 20px;
+}
+
+.simple-action-card {
+  text-decoration: none;
+}
+
+.simple-action-card p {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
 .dashboard-hero {
   padding: 18px 0 30px;
 }
@@ -954,11 +1015,17 @@ input:focus-visible,
   .flow-sidebar {
     position: static;
   }
+
+  .simple-stats,
+  .simple-actions {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 760px) {
   .dashboard-shell,
-  .flow-shell {
+  .flow-shell,
+  .simple-shell {
     width: min(calc(100% - 20px), 1320px);
   }
 
@@ -979,7 +1046,9 @@ input:focus-visible,
   .highlights-grid,
   .ride-type-grid,
   .dual-grid,
-  .timeline {
+  .timeline,
+  .simple-stats,
+  .simple-actions {
     grid-template-columns: 1fr;
   }
 
@@ -992,6 +1061,11 @@ input:focus-visible,
   .recent-card,
   .booking-sidecard,
   .action-card,
+  .simple-header,
+  .simple-pagebar,
+  .simple-stat,
+  .simple-action-card,
+  .simple-summary-card,
   .auth-panel,
   .auth-stage,
   .profile-card {
