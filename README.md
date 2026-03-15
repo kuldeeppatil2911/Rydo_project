@@ -1,6 +1,11 @@
 # Rydo
 
-Rydo is a full-stack ride-booking web application built for a minor project using MongoDB, Express, React, and Node.js. It supports ride booking, fare estimation, driver matching, trip tracking, authentication, profile management, and emergency contact notifications.
+Rydo is a full-stack ride-booking web application built for a minor project using MongoDB, Express, React, and Node.js. It supports ride booking, fare estimation, driver matching, trip tracking, authentication, profile management, live map tracking, and emergency contact notifications.
+
+## Live Links
+
+- Frontend: `https://rydo-project.vercel.app`
+- Backend health: `https://rydo-api-service-production.up.railway.app/api/health`
 
 ## Tech Stack
 
@@ -10,6 +15,8 @@ Rydo is a full-stack ride-booking web application built for a minor project usin
 - Node.js
 - JWT authentication
 - Nodemailer for emergency contact alerts
+- Twilio SMS support
+- React Leaflet for live map experience
 
 ## Features
 
@@ -20,6 +27,7 @@ Rydo is a full-stack ride-booking web application built for a minor project usin
 - Driver matching from seeded demo data
 - Live trip progress simulation with booking status updates
 - Live browser-GPS map showing the user's current location
+- Cleaner mobile-inspired login and signup UI
 - Recent trip history fetched from MongoDB
 - Emergency contact email and SMS notification when a signed-in user books a ride
 - Profile toggle to turn emergency safety alerts on or off
@@ -85,24 +93,29 @@ To build the frontend for production:
 
 ```bash
 npm run build --workspace client
+```
 
 ## Deployment
 
-This repository includes [render.yaml](C:/Users/kp494/OneDrive/Documents/New%20project/render.yaml) so it can be deployed on Render with one backend service and one static frontend service.
+The project is currently deployed with:
+
+- Vercel for the frontend
+- Railway for the backend
+- MongoDB Atlas for the database
 
 Before deployment, set these environment variables on the hosting platform:
 
+- `CLIENT_URL`
 - `MONGO_URI`
 - `JWT_SECRET`
-- `CLIENT_URL`
 - `VITE_API_URL`
 - Optional SMTP values for email alerts
 - Optional Twilio values for SMS alerts
-```
 
 ## Notes
 
 - The backend seeds default drivers and locations automatically when the database is empty.
 - Emergency contact email sending works when SMTP variables are configured. SMS sending works when Twilio variables are configured.
 - Without SMTP or Twilio configuration, the server logs the notification intent so the safety flow still remains demo-friendly.
+- In production, the frontend uses the Railway API URL and the backend CORS is configured for the deployed Vercel domain.
 - This project is designed to be demo-friendly for academic presentation and minor project evaluation.

@@ -4,3 +4,9 @@ dist
 server/.env
 client/dist
 npm-debug.log*
+temp_client_auth_ui/
+report_assets/
+*.docx
+*.pdf
+*.pptx
+~$*

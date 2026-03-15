@@ -33,6 +33,7 @@ export async function authMiddleware(req, res, next) {
   if (!user) {
     return res.status(401).json({ message: "User not found." });
   }
+  delete user.password;
 
   req.user = user;
   req.userId = userId;
@@ -53,6 +54,7 @@ export async function optionalAuthMiddleware(req, res, next) {
 
   const user = await User.findById(userId).lean();
   if (user) {
+    delete user.password;
     req.user = user;
     req.userId = userId;
   }

@@ -30,91 +30,84 @@ export default function Signup() {
   }
 
   return (
-    <div className="auth-page">
-      <div className="auth-card card">
-        <section className="auth-stage">
-          <div className="brand-lockup auth-brand">
-            <div className="brand-mark">R</div>
-            <h1>Rydo</h1>
-          </div>
+    <div className="auth-page auth-page-minimal">
+      <div className="auth-scene">
+        <div className="auth-scene-copy">
           <p className="eyebrow">Create account</p>
-          <h2>Build your rider profile first.</h2>
-          <p className="auth-stage-copy">
-            Set up your account before you start booking. After sign up, the app moves into the dashboard and ride flow.
-          </p>
-          <div className="auth-stage-points">
-            <div>
-              <strong>Personal account</strong>
-              <span>Save your rider identity for future bookings.</span>
-            </div>
-            <div>
-              <strong>Safety ready</strong>
-              <span>Add emergency contact details later from your profile.</span>
-            </div>
-            <div>
-              <strong>Presentation friendly</strong>
-              <span>A clear first step before ride booking and tracking screens.</span>
-            </div>
-          </div>
-        </section>
+          <h2>Get started fast.</h2>
+          <p className="auth-scene-text">Create your profile and book your first ride.</p>
+        </div>
 
-        <section className="auth-panel">
-          <p className="eyebrow">Register</p>
-          <h3>Create your account</h3>
-          <form className="auth-form" onSubmit={handleSubmit}>
-            {error ? <p className="error-banner">{error}</p> : null}
-            <label>
-              Name
+        <div className="auth-phone-frame auth-phone-frame-tall">
+          <div className="auth-phone-notch" />
+          <section className="auth-screen">
+            <div className="auth-brand-center compact">
+              <div className="brand-mark minimal-mark">
+                <span className="minimal-mark-core" />
+              </div>
+              <h1>Rydo</h1>
+              <p>Create your account</p>
+            </div>
+
+            <form className="auth-form auth-form-minimal" onSubmit={handleSubmit}>
+              {error ? <p className="error-banner">{error}</p> : null}
+
+              <label className="sr-only" htmlFor="signup-name">Name</label>
               <input
+                id="signup-name"
                 type="text"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="Your name"
+                placeholder="Name"
                 required
                 autoComplete="name"
               />
-            </label>
-            <label>
-              Email
+
+              <label className="sr-only" htmlFor="signup-email">Email</label>
               <input
+                id="signup-email"
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@example.com"
+                placeholder="Email"
                 required
                 autoComplete="email"
               />
-            </label>
-            <label>
-              Password
+
+              <label className="sr-only" htmlFor="signup-password">Password</label>
               <input
+                id="signup-password"
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="At least 6 characters"
+                placeholder="Password"
                 required
                 minLength={6}
                 autoComplete="new-password"
               />
-            </label>
-            <label>
-              Phone
+
+              <label className="sr-only" htmlFor="signup-phone">Phone</label>
               <input
+                id="signup-phone"
                 type="tel"
                 value={phone}
                 onChange={(event) => setPhone(event.target.value)}
-                placeholder="+91 98765 43210"
+                placeholder="Phone"
                 autoComplete="tel"
               />
-            </label>
-            <button className="button primary full-width" type="submit" disabled={loading}>
-              {loading ? "Creating account..." : "Create and continue"}
-            </button>
-          </form>
-          <p className="auth-footer">
-            Already have an account? <Link to="/login">Sign in</Link>
-          </p>
-        </section>
+
+              <button className="button primary full-width auth-submit" type="submit" disabled={loading}>
+                {loading ? "Creating..." : "Create account"}
+              </button>
+            </form>
+
+            <div className="auth-divider"><span>or</span></div>
+
+            <p className="auth-footer auth-footer-center">
+              Already have an account? <Link to="/login">Sign in</Link>
+            </p>
+          </section>
+        </div>
       </div>
     </div>
   );
