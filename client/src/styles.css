@@ -701,6 +701,29 @@ select:focus-visible,
   box-shadow: 0 0 0 10px rgba(209, 75, 39, 0.18);
 }
 
+.driver-map-pin,
+.destination-map-pin {
+  background: transparent;
+  border: none;
+}
+
+.driver-map-pin__dot,
+.destination-map-pin__dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 8px rgba(20, 50, 74, 0.14);
+}
+
+.driver-map-pin__dot {
+  background: #14324a;
+}
+
+.destination-map-pin__dot {
+  background: #0d7a5f;
+}
+
 @media (max-width: 980px) {
   .hero-grid,
   .dashboard-grid,

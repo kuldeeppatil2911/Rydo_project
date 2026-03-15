@@ -85,6 +85,19 @@ To build the frontend for production:
 
 ```bash
 npm run build --workspace client
+
+## Deployment
+
+This repository includes [render.yaml](C:/Users/kp494/OneDrive/Documents/New%20project/render.yaml) so it can be deployed on Render with one backend service and one static frontend service.
+
+Before deployment, set these environment variables on the hosting platform:
+
+- `MONGO_URI`
+- `JWT_SECRET`
+- `CLIENT_URL`
+- `VITE_API_URL`
+- Optional SMTP values for email alerts
+- Optional Twilio values for SMS alerts
 ```
 
 ## Notes

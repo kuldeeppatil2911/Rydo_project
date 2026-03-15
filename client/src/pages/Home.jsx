@@ -512,7 +512,7 @@ export default function Home() {
         </section>
 
         <section className="insights-grid">
-          <LiveLocationMap />
+          <LiveLocationMap displayTrip={displayTrip} activeStage={activeStage} />
 
           <article className="card highlights-card">
             <div className="section-heading">
