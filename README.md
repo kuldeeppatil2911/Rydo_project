@@ -1,27 +1,87 @@
-# Rydo MERN Project
+# Rydo
 
-Rydo is a full-stack ride-booking web application built with MongoDB, Express, React, and Node.js.
+Rydo is a full-stack ride-booking web application built for a minor project using MongoDB, Express, React, and Node.js. It supports ride booking, fare estimation, driver matching, trip tracking, authentication, profile management, and emergency contact notifications.
 
-## Structure
+## Tech Stack
 
-- `client` - React + Vite frontend
-- `server` - Express API with MongoDB models and booking logic
+- MongoDB with Mongoose
+- Express.js REST API
+- React with Vite
+- Node.js
+- JWT authentication
+- Nodemailer for emergency contact alerts
 
-## Core Features
+## Features
 
-- Live fare estimation from pickup, drop-off, ride type, and trip mode
-- Driver matching and booking creation through API endpoints
-- Real-time trip progression on the frontend with backend status updates
-- Recent bookings fetched from the server
-- Seeded locations and drivers for a ready-to-demo project flow
+- User signup and login with JWT-based authentication
+- Profile page with emergency contact details
+- Ride booking with pickup, drop-off, ride type, payment, and trip mode
+- Dynamic fare, distance, and time estimation
+- Driver matching from seeded demo data
+- Live trip progress simulation with booking status updates
+- Recent trip history fetched from MongoDB
+- Emergency contact email notification when a signed-in user books a ride
 
-## Run
+## Project Structure
 
-1. Install dependencies with `npm install`
-2. Copy `server/.env.example` to `server/.env`
-3. Set `MONGO_URI` in `server/.env`
-4. Start both apps with `npm run dev`
+- `client` : React frontend
+- `server` : Express backend and MongoDB models
 
-Frontend runs on `http://localhost:5173`
+## API Modules
 
-Backend runs on `http://localhost:5000`
+- `/api/auth` : register and login
+- `/api/users` : profile and emergency contact updates
+- `/api/meta` : ride types and location data
+- `/api/drivers` : available drivers
+- `/api/bookings` : estimate, create, update status, and recent bookings
+
+## Environment Setup
+
+Create `server/.env` from `server/.env.example` and configure:
+
+```env
+PORT=5000
+CLIENT_URL=http://localhost:5173
+MONGO_URI=mongodb://127.0.0.1:27017/rydo
+JWT_SECRET=your-super-secret-key-change-in-production
+
+# Optional: SMTP for emergency contact notifications
+# SMTP_HOST=smtp.example.com
+# SMTP_PORT=587
+# SMTP_USER=
+# SMTP_PASS=
+# SMTP_FROM=noreply@rydo.com
+```
+
+## Local Run
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start the development servers:
+
+```bash
+npm run dev
+```
+
+3. Open:
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:5000`
+
+## Build
+
+To build the frontend for production:
+
+```bash
+npm run build --workspace client
+```
+
+## Notes
+
+- The backend seeds default drivers and locations automatically when the database is empty.
+- Emergency contact email sending works when SMTP variables are configured. Without SMTP, the app logs the notification intent on the server.
+- This project is designed to be demo-friendly for academic presentation and minor project evaluation.
