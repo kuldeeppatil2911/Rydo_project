@@ -40,6 +40,7 @@ const driverSnapshotSchema = new mongoose.Schema(
 
 const bookingSchema = new mongoose.Schema(
   {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     pickup: {
       type: pointSnapshotSchema,
       required: true

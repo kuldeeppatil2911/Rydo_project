@@ -1,5 +1,6 @@
 import Booking from "../models/Booking.js";
 import { buildTripEstimate, createOtp, findBestDriver } from "../services/tripService.js";
+import { sendRideBookedToEmergencyContact } from "../services/notificationService.js";
 
 export async function estimateBooking(req, res, next) {
   try {
@@ -28,6 +29,7 @@ export async function createBookingController(req, res, next) {
     const driver = await findBestDriver(req.body.rideType);
     const booking = await Booking.create({
       ...estimate,
+      user: req.userId || null,
       driver,
       payment: req.body.payment,
       tripMode: req.body.tripMode,
@@ -39,6 +41,22 @@ export async function createBookingController(req, res, next) {
         `Driver ${driver.name} is being connected to your request.`
       ]
     });
+
+    const user = req.user;
+    const emergencyContact = user?.emergencyContact;
+    const emergencyEmail = emergencyContact?.email?.trim();
+    if (emergencyEmail) {
+      sendRideBookedToEmergencyContact({
+        toEmail: emergencyEmail,
+        riderName: user.name || "Rider",
+        pickup: estimate.pickup.name,
+        dropoff: estimate.dropoff.name,
+        fare: String(estimate.fare),
+        driverName: driver.name,
+        otp: booking.otp,
+        payment: req.body.payment
+      }).catch((err) => console.error("[Rydo] Emergency notify error:", err));
+    }
 
     res.status(201).json({ data: booking });
   } catch (error) {

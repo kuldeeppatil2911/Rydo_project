@@ -1,9 +1,15 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
+function getAuthHeader() {
+  const token = localStorage.getItem("rydo_token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
       "Content-Type": "application/json",
+      ...getAuthHeader(),
       ...(options.headers || {})
     },
     ...options
@@ -50,4 +56,29 @@ export function updateBookingStatus(id, status) {
 
 export function getRecentBookings(limit = 4) {
   return request(`/bookings/recent?limit=${limit}`);
+}
+
+export function authRegister(payload) {
+  return request("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function authLogin(payload) {
+  return request("/auth/login", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function getMe() {
+  return request("/users/me");
+}
+
+export function updateMe(payload) {
+  return request("/users/me", {
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  });
 }

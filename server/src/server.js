@@ -2,6 +2,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { connectDatabase } from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import metaRoutes from "./routes/metaRoutes.js";
 import driverRoutes from "./routes/driverRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
@@ -20,6 +22,8 @@ app.get("/api/health", (req, res) => {
   res.json({ ok: true, message: "Rydo API is running." });
 });
 
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/meta", metaRoutes);
 app.use("/api/drivers", driverRoutes);
 app.use("/api/bookings", bookingRoutes);
