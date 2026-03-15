@@ -14,7 +14,8 @@ export default function Profile() {
     phone: "",
     emergencyName: "",
     emergencyPhone: "",
-    emergencyEmail: ""
+    emergencyEmail: "",
+    emergencyAlertsEnabled: true
   });
 
   useEffect(() => {
@@ -22,15 +23,17 @@ export default function Profile() {
       navigate("/login", { replace: true });
       return;
     }
+
     getMe()
       .then((res) => {
-        const u = res.data;
+        const currentUser = res.data;
         setForm({
-          name: u.name || "",
-          phone: u.phone || "",
-          emergencyName: u.emergencyContact?.name || "",
-          emergencyPhone: u.emergencyContact?.phone || "",
-          emergencyEmail: u.emergencyContact?.email || ""
+          name: currentUser.name || "",
+          phone: currentUser.phone || "",
+          emergencyName: currentUser.emergencyContact?.name || "",
+          emergencyPhone: currentUser.emergencyContact?.phone || "",
+          emergencyEmail: currentUser.emergencyContact?.email || "",
+          emergencyAlertsEnabled: currentUser.emergencyAlertsEnabled !== false
         });
       })
       .catch(() => logout());
@@ -40,15 +43,17 @@ export default function Profile() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
     setError("");
     setSuccess("");
     setSaving(true);
+
     try {
       const payload = {
         name: form.name.trim(),
         phone: form.phone.trim(),
+        emergencyAlertsEnabled: form.emergencyAlertsEnabled,
         emergencyContact:
           form.emergencyName || form.emergencyPhone || form.emergencyEmail
             ? {
@@ -58,9 +63,10 @@ export default function Profile() {
               }
             : null
       };
+
       const { data } = await updateMe(payload);
       updateUser(data);
-      setSuccess("Profile and emergency contact saved. They will be notified when you book a ride.");
+      setSuccess("Profile saved. Emergency alerts now follow your on or off setting.");
     } catch (err) {
       setError(err.message || "Update failed.");
     } finally {
@@ -68,12 +74,14 @@ export default function Profile() {
     }
   }
 
-  if (!user) return <div className="loading-screen">Loading...</div>;
+  if (!user) {
+    return <div className="loading-screen">Loading...</div>;
+  }
 
   return (
     <div className="profile-page">
       <header className="profile-header">
-        <Link to="/" className="back-link">← Back to Rydo</Link>
+        <Link to="/" className="back-link">&larr; Back to Rydo</Link>
         <div className="brand-lockup auth-brand">
           <div className="brand-mark">R</div>
           <h1>Rydo</h1>
@@ -83,62 +91,85 @@ export default function Profile() {
       <main className="profile-main">
         <article className="card profile-card">
           <div className="section-heading">
-            <p className="eyebrow">Account</p>
-            <h3>Profile & emergency contact</h3>
+            <div>
+              <p className="eyebrow">Account</p>
+              <h3>Profile and emergency contact</h3>
+            </div>
           </div>
+
           <p className="profile-hint">
-            Add an emergency contact with an email. When you book a ride, they will receive a notification with your ride details (pickup, drop-off, driver, OTP).
+            Add an emergency contact email or phone. When emergency alerts are on, Rydo sends route details,
+            vehicle number, driver name, payment mode, and OTP for safety.
           </p>
+
           <form className="profile-form" onSubmit={handleSubmit}>
-            {error && <p className="error-banner">{error}</p>}
-            {success && <p className="success-banner">{success}</p>}
+            {error ? <p className="error-banner">{error}</p> : null}
+            {success ? <p className="success-banner">{success}</p> : null}
+
             <label>
               Your name
               <input
                 type="text"
                 value={form.name}
-                onChange={(e) => handleChange("name", e.target.value)}
+                onChange={(event) => handleChange("name", event.target.value)}
                 required
               />
             </label>
+
             <label>
               Your phone
               <input
                 type="tel"
                 value={form.phone}
-                onChange={(e) => handleChange("phone", e.target.value)}
+                onChange={(event) => handleChange("phone", event.target.value)}
               />
             </label>
+
             <hr className="form-divider" />
-            <p className="eyebrow">Emergency contact (notified when you book a ride)</p>
+
+            <p className="eyebrow">Emergency contact and safety alerts</p>
+
+            <label className="toggle-row">
+              <span>Enable emergency alerts</span>
+              <input
+                type="checkbox"
+                checked={form.emergencyAlertsEnabled}
+                onChange={(event) => handleChange("emergencyAlertsEnabled", event.target.checked)}
+              />
+            </label>
+
             <label>
               Contact name
               <input
                 type="text"
                 value={form.emergencyName}
-                onChange={(e) => handleChange("emergencyName", e.target.value)}
-                placeholder="e.g. Family member or friend"
+                onChange={(event) => handleChange("emergencyName", event.target.value)}
+                placeholder="Family member or friend"
               />
             </label>
+
             <label>
-              Contact phone
+              Contact phone <span className="required-note">(used for SMS)</span>
               <input
                 type="tel"
                 value={form.emergencyPhone}
-                onChange={(e) => handleChange("emergencyPhone", e.target.value)}
+                onChange={(event) => handleChange("emergencyPhone", event.target.value)}
+                placeholder="+91 98765 43210"
               />
             </label>
+
             <label>
-              Contact email <span className="required-note">(required for notification)</span>
+              Contact email <span className="required-note">(used for email)</span>
               <input
                 type="email"
                 value={form.emergencyEmail}
-                onChange={(e) => handleChange("emergencyEmail", e.target.value)}
-                placeholder="their@email.com"
+                onChange={(event) => handleChange("emergencyEmail", event.target.value)}
+                placeholder="contact@example.com"
               />
             </label>
+
             <button className="button primary full-width" type="submit" disabled={saving}>
-              {saving ? "Saving..." : "Save profile & emergency contact"}
+              {saving ? "Saving..." : "Save profile and safety settings"}
             </button>
           </form>
         </article>

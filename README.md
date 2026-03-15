@@ -20,7 +20,8 @@ Rydo is a full-stack ride-booking web application built for a minor project usin
 - Driver matching from seeded demo data
 - Live trip progress simulation with booking status updates
 - Recent trip history fetched from MongoDB
-- Emergency contact email notification when a signed-in user books a ride
+- Emergency contact email and SMS notification when a signed-in user books a ride
+- Profile toggle to turn emergency safety alerts on or off
 
 ## Project Structure
 
@@ -51,6 +52,11 @@ JWT_SECRET=your-super-secret-key-change-in-production
 # SMTP_USER=
 # SMTP_PASS=
 # SMTP_FROM=noreply@rydo.com
+
+# Optional: Twilio SMS for emergency text notifications
+# TWILIO_ACCOUNT_SID=
+# TWILIO_AUTH_TOKEN=
+# TWILIO_PHONE_NUMBER=
 ```
 
 ## Local Run
@@ -83,5 +89,6 @@ npm run build --workspace client
 ## Notes
 
 - The backend seeds default drivers and locations automatically when the database is empty.
-- Emergency contact email sending works when SMTP variables are configured. Without SMTP, the app logs the notification intent on the server.
+- Emergency contact email sending works when SMTP variables are configured. SMS sending works when Twilio variables are configured.
+- Without SMTP or Twilio configuration, the server logs the notification intent so the safety flow still remains demo-friendly.
 - This project is designed to be demo-friendly for academic presentation and minor project evaluation.

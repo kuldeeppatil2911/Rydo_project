@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema(
     emergencyContact: {
       type: emergencyContactSchema,
       default: null
+    },
+    emergencyAlertsEnabled: {
+      type: Boolean,
+      default: true
     }
   },
   { timestamps: true }

@@ -16,10 +16,11 @@ export async function updateMe(req, res, next) {
     if (!req.userId) {
       return res.status(401).json({ message: "Authentication required." });
     }
-    const { name, phone, emergencyContact } = req.body;
+    const { name, phone, emergencyContact, emergencyAlertsEnabled } = req.body;
     const updates = {};
     if (name !== undefined) updates.name = String(name).trim();
     if (phone !== undefined) updates.phone = String(phone).trim();
+    if (emergencyAlertsEnabled !== undefined) updates.emergencyAlertsEnabled = Boolean(emergencyAlertsEnabled);
     if (emergencyContact !== undefined) {
       updates.emergencyContact = emergencyContact === null || (typeof emergencyContact === "object" && !emergencyContact?.name && !emergencyContact?.phone && !emergencyContact?.email)
         ? null

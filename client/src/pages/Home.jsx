@@ -42,7 +42,9 @@ export default function Home() {
   const [error, setError] = useState("");
   const timerRef = useRef(null);
 
-  const hasEmergencyContact = isAuthenticated && user?.emergencyContact?.email?.trim();
+  const hasEmergencyContact =
+    isAuthenticated && (user?.emergencyContact?.email?.trim() || user?.emergencyContact?.phone?.trim());
+  const emergencyAlertsEnabled = isAuthenticated && user?.emergencyAlertsEnabled !== false;
 
   useEffect(() => {
     let ignore = false;
@@ -72,16 +74,26 @@ export default function Home() {
     }
 
     loadInitialData();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   useEffect(() => {
     if (!form.rideType) return;
     let ignore = false;
+
     getDrivers(form.rideType)
-      .then((response) => { if (!ignore) setDrivers(response.data); })
-      .catch((driverError) => { if (!ignore) setError(driverError.message); });
-    return () => { ignore = true; };
+      .then((response) => {
+        if (!ignore) setDrivers(response.data);
+      })
+      .catch((driverError) => {
+        if (!ignore) setError(driverError.message);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [form.rideType]);
 
   useEffect(() => {
@@ -90,23 +102,35 @@ export default function Home() {
       setError("Pickup and drop-off must be different.");
       return;
     }
+
     let ignore = false;
     setError("");
+
     estimateBooking(form)
-      .then((response) => { if (!ignore) setEstimate(response.data); })
-      .catch((estimateError) => { if (!ignore) setError(estimateError.message); });
-    return () => { ignore = true; };
+      .then((response) => {
+        if (!ignore) setEstimate(response.data);
+      })
+      .catch((estimateError) => {
+        if (!ignore) setError(estimateError.message);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [form]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setHeroBookings((count) => count + Math.floor(Math.random() * 3));
     }, 3200);
+
     return () => window.clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
-    if (!currentBooking || tripStageIndex < 0 || tripStageIndex >= timelineStages.length - 1) return undefined;
+    if (!currentBooking || tripStageIndex < 0 || tripStageIndex >= timelineStages.length - 1) {
+      return undefined;
+    }
 
     timerRef.current = window.setTimeout(async () => {
       const nextIndex = tripStageIndex + 1;
@@ -161,8 +185,12 @@ export default function Home() {
         formatLog(`Driver ${booking.driver.name} is being connected to your request.`),
         formatLog(timelineStages[0].log)
       ]);
-      if (hasEmergencyContact) {
-        setActivityLog((entries) => [formatLog("Your emergency contact has been notified of this ride."), ...entries]);
+
+      if (hasEmergencyContact && emergencyAlertsEnabled) {
+        setActivityLog((entries) => [
+          formatLog("Emergency alert sent with route, vehicle number, and ride details."),
+          ...entries
+        ]);
       }
 
       const recentResponse = await getRecentBookings();
@@ -230,10 +258,10 @@ export default function Home() {
 
         <section className="hero-grid">
           <div className="hero-copy">
-            <p className="hero-kicker">Fast. Reliable. Emergency contact notified.</p>
-            <h2>Book a ride, match with a driver, and your emergency contact gets notified automatically.</h2>
+            <p className="hero-kicker">Fast. Reliable. Safety alerts included.</p>
+            <h2>Book a ride, match with a driver, and share vehicle and location details with your emergency contact.</h2>
             <p className="hero-text">
-              Rydo is a full MERN-stack ride app. Sign in, add an emergency contact in your profile, and when you book a ride they receive an email with your trip details.
+              Rydo is a full MERN-stack ride app. Sign in, add an emergency contact in your profile, and turn safety alerts on or off anytime.
             </p>
             <div className="hero-actions">
               <a className="button primary" href="#bookingPanel">Book a Ride</a>
@@ -242,7 +270,7 @@ export default function Home() {
             <div className="hero-features">
               <span>Mongo-backed bookings</span>
               <span>Express REST APIs</span>
-              <span>Emergency contact alerts</span>
+              <span>Emergency email and SMS alerts</span>
             </div>
             {error ? <p className="error-banner">{error}</p> : null}
           </div>
@@ -293,16 +321,22 @@ export default function Home() {
               </div>
             </div>
 
-            {hasEmergencyContact && (
+            {hasEmergencyContact && emergencyAlertsEnabled ? (
               <p className="emergency-notice">
-                Your emergency contact ({user?.emergencyContact?.email}) will receive an email when you confirm this booking.
+                Your emergency contact will receive safety details including route, vehicle number, and OTP when you confirm this booking.
               </p>
-            )}
+            ) : null}
+
+            {hasEmergencyContact && !emergencyAlertsEnabled ? (
+              <p className="emergency-notice">
+                Emergency contact exists, but safety alerts are currently turned off in your profile.
+              </p>
+            ) : null}
 
             <form className="booking-form" onSubmit={handleSubmit}>
               <label>
                 Pickup
-                <select value={form.pickup} onChange={(e) => updateForm("pickup", e.target.value)} required>
+                <select value={form.pickup} onChange={(event) => updateForm("pickup", event.target.value)} required>
                   {meta.locations.map((location) => (
                     <option key={location.name} value={location.name}>{location.name}</option>
                   ))}
@@ -311,7 +345,7 @@ export default function Home() {
 
               <label>
                 Drop-off
-                <select value={form.dropoff} onChange={(e) => updateForm("dropoff", e.target.value)} required>
+                <select value={form.dropoff} onChange={(event) => updateForm("dropoff", event.target.value)} required>
                   {meta.locations.map((location) => (
                     <option key={location.name} value={location.name}>{location.name}</option>
                   ))}
@@ -338,7 +372,7 @@ export default function Home() {
               <div className="dual-grid">
                 <label>
                   Payment
-                  <select value={form.payment} onChange={(e) => updateForm("payment", e.target.value)}>
+                  <select value={form.payment} onChange={(event) => updateForm("payment", event.target.value)}>
                     <option value="UPI">UPI</option>
                     <option value="Card">Card</option>
                     <option value="Cash">Cash</option>
@@ -347,7 +381,7 @@ export default function Home() {
                 </label>
                 <label>
                   Trip mode
-                  <select value={form.tripMode} onChange={(e) => updateForm("tripMode", e.target.value)}>
+                  <select value={form.tripMode} onChange={(event) => updateForm("tripMode", event.target.value)}>
                     <option value="now">Ride now</option>
                     <option value="scheduled">Schedule for later</option>
                   </select>
@@ -407,7 +441,7 @@ export default function Home() {
               <div>
                 <span>Vehicle</span>
                 <strong>
-                  {currentBooking?.driver ? `${currentBooking.driver.vehicle} • ${currentBooking.driver.plate}` : "-"}
+                  {currentBooking?.driver ? `${currentBooking.driver.vehicle} - ${currentBooking.driver.plate}` : "-"}
                 </strong>
               </div>
               <div>
@@ -448,7 +482,7 @@ export default function Home() {
                   <div className="driver-badge">{driver.name.charAt(0)}</div>
                   <div className="driver-meta">
                     <strong>{driver.name}</strong>
-                    <span>{driver.vehicle} • {driver.plate} • {driver.rating.toFixed(1)} stars</span>
+                    <span>{driver.vehicle} - {driver.plate} - {driver.rating.toFixed(1)} stars</span>
                   </div>
                   <div className="driver-tag">{driver.rideType === form.rideType ? "Best match" : `${driver.eta} min away`}</div>
                 </div>
@@ -466,11 +500,11 @@ export default function Home() {
             <div className="highlights-grid">
               <div>
                 <strong>Add emergency contact</strong>
-                <p>In your profile, add a contact with their email. When you book a ride, they get an email with pickup, drop-off, driver, and OTP.</p>
+                <p>In your profile, add a contact email or phone. When you book a ride, they receive route details, driver info, vehicle number, and OTP.</p>
               </div>
               <div>
-                <strong>No extra step</strong>
-                <p>Just book as usual. If you’re signed in and have set an emergency contact, the notification is sent automatically.</p>
+                <strong>On or off control</strong>
+                <p>Just book as usual. If alerts are enabled in your profile, the safety notification is sent automatically.</p>
               </div>
             </div>
           </article>
@@ -489,7 +523,7 @@ export default function Home() {
                 <div className="recent-item" key={booking._id}>
                   <div>
                     <strong>{booking.pickup.name} to {booking.dropoff.name}</strong>
-                    <p>{booking.rideType.name} • {booking.payment} • Rs. {booking.fare}</p>
+                    <p>{booking.rideType.name} - {booking.payment} - Rs. {booking.fare}</p>
                   </div>
                   <div className="recent-tag">{formatDate(booking.createdAt)}</div>
                 </div>
@@ -516,6 +550,7 @@ function getRouteGeometry(trip) {
   const dy = trip.dropoff.y - trip.pickup.y;
   const length = Math.sqrt((dx ** 2) + (dy ** 2));
   const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
   return {
     left: `${trip.pickup.x}%`,
     top: `${trip.pickup.y}%`,

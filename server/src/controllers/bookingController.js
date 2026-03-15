@@ -44,15 +44,20 @@ export async function createBookingController(req, res, next) {
 
     const user = req.user;
     const emergencyContact = user?.emergencyContact;
+    const emergencyAlertsEnabled = user?.emergencyAlertsEnabled !== false;
     const emergencyEmail = emergencyContact?.email?.trim();
-    if (emergencyEmail) {
+    const emergencyPhone = emergencyContact?.phone?.trim();
+
+    if (emergencyAlertsEnabled && (emergencyEmail || emergencyPhone)) {
       sendRideBookedToEmergencyContact({
         toEmail: emergencyEmail,
+        contactPhone: emergencyPhone,
         riderName: user.name || "Rider",
         pickup: estimate.pickup.name,
         dropoff: estimate.dropoff.name,
         fare: String(estimate.fare),
         driverName: driver.name,
+        vehicleNumber: driver.plate,
         otp: booking.otp,
         payment: req.body.payment
       }).catch((err) => console.error("[Rydo] Emergency notify error:", err));
