@@ -9,6 +9,7 @@ import {
   updateBookingStatus
 } from "../api";
 import { useAuth } from "../context/AuthContext";
+import LiveLocationMap from "../components/LiveLocationMap";
 
 const timelineStages = [
   { label: "Searching", progress: 10, mapProgress: 0, log: "Searching nearby drivers for the best match." },
@@ -505,6 +506,29 @@ export default function Home() {
               <div>
                 <strong>On or off control</strong>
                 <p>Just book as usual. If alerts are enabled in your profile, the safety notification is sent automatically.</p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section className="insights-grid">
+          <LiveLocationMap />
+
+          <article className="card highlights-card">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Live Safety</p>
+                <h3>Use current GPS for safer pickups</h3>
+              </div>
+            </div>
+            <div className="highlights-grid">
+              <div>
+                <strong>Real current position</strong>
+                <p>The live map reads your browser location and updates automatically while the page is open.</p>
+              </div>
+              <div>
+                <strong>Useful for emergency sharing</strong>
+                <p>Your current location can help confirm pickup context alongside the driver and vehicle details.</p>
               </div>
             </div>
           </article>

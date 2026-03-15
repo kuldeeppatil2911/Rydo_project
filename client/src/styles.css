@@ -323,6 +323,7 @@ h3 {
 .booking-card,
 .tracking-card,
 .driver-card,
+.live-map-card,
 .highlights-card,
 .recent-card {
   padding: 24px;
@@ -644,6 +645,62 @@ select:focus-visible,
   margin-top: 18px;
 }
 
+.live-map-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.live-map-copy {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.live-map-frame {
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(20, 50, 74, 0.08);
+}
+
+.leaflet-map {
+  height: 360px;
+  width: 100%;
+}
+
+.live-map-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.live-map-meta div {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(20, 50, 74, 0.08);
+}
+
+.live-map-meta span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.live-location-pin {
+  background: transparent;
+  border: none;
+}
+
+.live-location-pin__dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 10px rgba(209, 75, 39, 0.18);
+}
+
 @media (max-width: 980px) {
   .hero-grid,
   .dashboard-grid,
@@ -823,6 +880,7 @@ select:focus-visible,
   .booking-card,
   .tracking-card,
   .driver-card,
+  .live-map-card,
   .highlights-card,
   .recent-card {
     padding: 18px;
@@ -839,7 +897,8 @@ select:focus-visible,
   .section-heading,
   .driver-item,
   .recent-item,
-  .activity-log-header {
+  .activity-log-header,
+  .live-map-meta {
     display: grid;
   }
 

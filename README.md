@@ -19,6 +19,7 @@ Rydo is a full-stack ride-booking web application built for a minor project usin
 - Dynamic fare, distance, and time estimation
 - Driver matching from seeded demo data
 - Live trip progress simulation with booking status updates
+- Live browser-GPS map showing the user's current location
 - Recent trip history fetched from MongoDB
 - Emergency contact email and SMS notification when a signed-in user books a ride
 - Profile toggle to turn emergency safety alerts on or off
